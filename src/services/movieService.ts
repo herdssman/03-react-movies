@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { Movie } from '../types/movie'
 
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 
 interface MovieServiceProps {
@@ -24,7 +24,7 @@ export default async function fetchMovies(query: string): Promise<Movie[]> {
                     query,
                 },
                 headers: {
-                    Authorization: `Bearer ${API_KEY}`,
+                    Authorization: `Bearer ${API_TOKEN}`,
                 },
             }
         );
@@ -34,7 +34,7 @@ export default async function fetchMovies(query: string): Promise<Movie[]> {
 
     } catch {
 
-        throw new Error('Something went wrong')
+        throw new Error('Failed to load movies. Please, ensure your connection and try again')
     }
 
     

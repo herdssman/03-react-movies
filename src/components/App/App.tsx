@@ -5,7 +5,7 @@ import type { Movie } from '../../types/movie'
 import fetchMovies from '../../services/movieService'
 import SearchBar from '../SearchBar/SearchBar'
 import Loader from '../Loader/Loader'
-import Error from '../ErrorMessage/ErrorMessage'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import MovieGrid from '../MovieGrid/MovieGrid'
 import MovieModal from '../MovieModal/MovieModal'
 
@@ -17,14 +17,17 @@ export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isModalopen, setIsModalopen] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<Movie>();
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const openModal = (movie:Movie) => setSelectedMovie(movie);
+  const closeModal = () => setSelectedMovie(null);
 
   const handleSearch = async (query: string) => {
     try {
 
       setIsLoading(true);
       setIsError(false);
+      setMovies([]);
 
       const hits = await fetchMovies(query);
       setMovies(hits);
@@ -44,18 +47,6 @@ export default function App() {
     }
   };
 
-
-  const openModal = () => setIsModalopen(true);
-  const closeModal = () => setIsModalopen(false);
-
-  const handleSelectedMovie = (movie: Movie) => {
-
-    setSelectedMovie(movie);
-    openModal();
-
-  };
-
-
   
   return (
     <div className={css.app}>
@@ -65,12 +56,12 @@ export default function App() {
       <SearchBar onSubmit={handleSearch} />
       
       {isLoading && <Loader />}
-      {isError && <Error />}
+      {isError && <ErrorMessage />}
 
 
-      {isModalopen && selectedMovie && <MovieModal movie={selectedMovie} onClose={closeModal} />}
+      {selectedMovie && <MovieModal movie={selectedMovie} onClose={closeModal} />}
 
-      <MovieGrid movies={movies} onSelect={handleSelectedMovie}/>
+      <MovieGrid movies={movies} onSelect={openModal}/>
 
     </div>
   )

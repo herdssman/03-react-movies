@@ -12,7 +12,9 @@ export default function MovieGrid({ onSelect, movies }: MovieGridProps) {
         onSelect(movie);
     }
     
-    if (movies.length > 0) {
+    if (movies.length === 0) { 
+        return <ul className={css.grid}></ul>;
+    }
 
     return (
         
@@ -33,6 +35,5 @@ export default function MovieGrid({ onSelect, movies }: MovieGridProps) {
         </ul>
 
     );
-
-    }
+        
 }
